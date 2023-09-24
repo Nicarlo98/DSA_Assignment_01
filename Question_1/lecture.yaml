@@ -1,0 +1,197 @@
+openapi: "3.0.3"
+info:
+  title: Lecturer Management System
+  description: API for managing staff within the Faculties.
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost:5000/
+    description: Local Development Server
+
+paths:
+  /createLecture:
+    post:
+      summary: Create a new lecturer
+      operationId: createLecture
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Lecture"
+      responses:
+        "200":
+          description: Lecturer created successfully
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+  /listOfLecture:
+    get:
+      summary: Get a list of all lecturers
+      operationId: listOfLecture
+      responses:
+        "200":
+          description: List of lecturers retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lecture"
+        "500":
+          description: Internal server error
+
+  /lectureById/{stuffID}:
+    get:
+      summary: Get details of a specific lecturer by their staff number
+      parameters:
+        - name: stuffID
+          in: path
+          required: true
+          description: Staff number of the lecturer to retrieve
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lecturer details retrieved successfully
+          content:
+            application/json:
+              schema:
+                description: Successfully Received Lecture
+                $ref: "#/components/schemas/Lecture"
+        "404":
+          description: Lecturer not found
+        "500":
+          description: Internal server error
+
+  /updateLecture:
+    put:
+      summary: Update an existing lecturer's information
+      parameters:
+        - name: stuffID
+          in: path
+          required: true
+          description: Staff numbered of the lecturer to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Lecture"
+      responses:
+        "200":
+          description: Lecturer updated successfully
+        "404":
+          description: Lecturer not found
+        "500":
+          description: Internal server error
+
+  /lectureById?stuffID={stuffID}:
+    delete:
+      summary: Delete a lecturer's record by their staff number
+      parameters:
+        - name: stuffID
+          in: path
+          required: true
+          description: Staff number needed for the lecturer to delete
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Lecturer deleted successfully
+        "404":
+          description: Lecturer not found
+        "500":
+          description: Internal server error
+
+  /AllLectureByCourse?courseName={courseName}:
+    get:
+      summary: Get all the lecturers that teach a certain course
+      parameters:
+        - name: courseName
+          in: path
+          required: true
+          description: Name of the course to retrieve lecturers for
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of lecturers retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lecture"
+        "404":
+          description: Course not found
+        "500":
+          description: Internal server error
+
+  /allLectureInSameOffice?officeNo={officeNo}:
+    get:
+      summary: Get all the lecturers that sit in the same office
+      parameters:
+        - name: officeNo
+          in: path
+          required: true
+          description: Office number to retrieve lecturers for
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of lecturers retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lecture"
+        "404":
+          description: Office not found
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    Lecture:
+      type: object
+      properties:
+        stuffID:
+          type: string
+          description: Staff number of the lecturer (unique identifier)
+        title:
+          type: string
+          description: Title of the lecturer
+        name:
+          type: string
+          description: Name of the lecturer
+        office:
+          $ref: "#/components/schemas/Office"
+        courses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Course"
+
+    Course:
+      type: object
+      properties:
+        courseCode:
+          type: string
+          description: Code of the course
+        courseName:
+          type: string
+          description: Name of the course
+        nqf:
+          type: string
+          description: National Qualifications Framework level of the course
+
+    Office:
+      type: object
+      properties:
+        officeNo:
+          type: string
+          description: Office number
