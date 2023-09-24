@@ -1,0 +1,62 @@
+syntax ="proto3";
+package librarySystemApp;
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+
+service Librarian {
+    rpc createBook(Book) returns (Book);
+    rpc createUsers(stream Users) returns (Responds);
+    rpc updateBook(Book) returns (Book);
+    rpc removeBook(RemoveBook) returns (google.protobuf.Empty);
+    rpc listBooks(google.protobuf.Empty) returns (stream Book);
+    rpc listBorrowedBooks(google.protobuf.Empty) returns (stream Book);
+}
+
+service Student {
+    rpc listBooks(google.protobuf.Empty) returns (stream Book);
+    rpc locateBook(LocateBook) returns (Book);
+    rpc borrowBook(BorrowBook) returns (Book);
+}
+
+enum Availability{
+    available = 0;
+    notAvailable = 1;
+}
+
+message Book {
+    string id = 1;
+    string title = 2;
+    string author = 3;
+    string optAuthor = 4;
+    string location = 5;
+    string isbn = 6;
+    Availability availability = 7;
+}
+
+enum userType {
+    lecturer =0;
+    student=1;
+}
+message Users {
+    string id = 1;
+    string name = 2;
+    userType typeOfUser = 3;
+}
+
+message BorrowBook {
+    string id = 1;
+    string isbn = 2;
+}
+
+message LocateBook {
+    string isbn = 1;
+}
+
+message RemoveBook {
+    string isbn = 1;
+}
+
+message Responds{
+    string Message = 1;
+}
